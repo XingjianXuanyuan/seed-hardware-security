@@ -8,7 +8,7 @@ unsigned int buffer_size = 10;
 uint8_t buffer[10] = {0,1,2,3,4,5,6,7,8,9};
 uint8_t array[256 * 4096];
 uint8_t temp = 0;
-char *secret = "STL-CityofCrime!";
+char *secret = "On the bonnie, bonnie banks of Loch Lomond.";
 
 static int scores[256];
 
@@ -106,7 +106,7 @@ int main()
         if (prev_max == max) {
             continue;
         }
-        if (max == 33 || max == 32) { /* ASCII for '!' and ' ' */
+        if (max == 33 || max == 46) { /* ASCII for '!' and '.' */
             break;
         }
 
