@@ -38,7 +38,7 @@ static const struct file_operations test_proc_fops =
 static int test_proc_init(void)
 {
     /* write message in kernel message buffer, which is publicly accessible */
-    printk("secret data address: %p\n", &secret);
+    printk(KERN_INFO "secret data address: %p\n", &secret);
 
     secret_buffer = (char *)vmalloc(10);
 
@@ -47,7 +47,7 @@ static int test_proc_init(void)
      * the read_proc() function will be invoked,
      * inside which the secret variable will be loaded.
      */
-    secret_entry = proc_create_data("secret_data", 0444, NULL, &test_proc_fops, NULL);
+    secret_entry = proc_create_data("secret_data", 0444, NULL, (const struct proc_ops *)&test_proc_fops, NULL);
     if (secret_entry) return 0;
 
     return -ENOMEM;
@@ -60,3 +60,8 @@ static void test_proc_cleanup(void)
 
 module_init(test_proc_init);
 module_exit(test_proc_cleanup);
+
+
+MODULE_LICENSE ("GPL");
+MODULE_AUTHOR ("SEED Labs 2.0");
+MODULE_DESCRIPTION ("Meltdown");
