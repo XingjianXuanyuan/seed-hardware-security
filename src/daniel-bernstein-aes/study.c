@@ -1,5 +1,5 @@
-/* gcc -O3 -o study study.c -lm */
-/* ./study 192.168.123.141 400 > study.400 */
+/* $ gcc -O3 -o study study.c -lm */
+/* $ ./study 192.168.123.141 400 > study.400 */
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/socket.h>

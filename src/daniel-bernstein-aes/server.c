@@ -1,6 +1,6 @@
-/* gcc -O3 -o server server.c -lcrypto */
-/* printenv | wc -c */
-/* ./server 192.168.123.141 < /dev/zero */
+/* $ gcc -O3 -o server server.c -lcrypto */
+/* $ printenv | wc -c */
+/* $ ./server 192.168.123.141 < /dev/zero */
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
