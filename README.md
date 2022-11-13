@@ -2,4 +2,6 @@
 
 [Preview](https://xingjianxuanyuan.github.io/side-channels-seedlab/)
 
-[Meltdown Attack Lab](https://xingjianxuanyuan.github.io/meltdown-seedlab/)
+[Spectre Attack Lab Writeup](https://xingjianxuanyuan.github.io//side-channels-seedlab/#the-spectre-attack)
+
+[Meltdown Attack Lab Writeup](https://xingjianxuanyuan.github.io/meltdown-seedlab/)
