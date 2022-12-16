@@ -77,11 +77,14 @@ int bench_write()
     return 1;
 }
 
-int main()
+int main(int argc, char **argv)
 {
     int64_t sum = 0;
     int i;
 
+    if (argc > 0) {
+        cpuid = argv[1];
+    }
     set_cpu_affinity(cpuid);
 
     g_mem_ptr = (int *)malloc(g_mem_size);

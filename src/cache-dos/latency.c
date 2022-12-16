@@ -41,7 +41,7 @@ uint64_t get_elapsed(struct timespec * start, struct timespec *end)
     return result;
 }
 
-int main()
+int main(int argc, char **argv)
 {
     struct item *list;
     struct item *itmp;
@@ -57,6 +57,9 @@ int main()
     uint64_t nsdiff;
     double avglat;
 
+    if (argc > 0) {
+        cpuid = argv[1];
+    }
     set_cpu_affinity(cpuid);
 
     workingset_size = g_mem_size / CACHE_LINE_SIZE;
