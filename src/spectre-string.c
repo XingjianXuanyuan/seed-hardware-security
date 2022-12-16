@@ -18,7 +18,7 @@ uint8_t array2[256 * 512];  /* 131072 */
 uint8_t unused1[64];
 uint8_t unused2[64];
 
-char *secret = "Hello World from Saint Louis";
+char *secret = "On the bonnie, bonnie banks of Loch Lomond.";
 
 uint8_t temp = 0; /* Prevent compiler from optimizing out victim_function() */
 
@@ -100,7 +100,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
 int main(int argc, const char **argv)
 {
     size_t malicious_x = (size_t)(secret - (char *)array1);
-    int i, score[2], len = 28;
+    int i, score[2], len = 43;
     uint8_t value[2];
 
     for (i = 0; i < sizeof(array2); i++) {

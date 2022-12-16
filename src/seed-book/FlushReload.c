@@ -6,7 +6,7 @@ char secret = 94;                   /* Secret value */
 int temp;                           /* Stores the value of the array element at the secret position */
 
 #define CACHE_HIT_THRESHOLD (80)    /* May vary based on CPU and memory speed */
-#define DELTA 1025
+#define DELTA 1024
 
 void flushSideChannel()
 {
